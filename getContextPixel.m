@@ -24,5 +24,5 @@ g_aucDirDxDy = {
 };
 imult =  g_aucDirDxDy{uiXYflag+1,1}{uiDirMode+1,1}(1);
 ishift =  g_aucDirDxDy{uiXYflag+1,1}{uiDirMode+1,1}(2);
-iTempDn = floor((iTempD*imult)/(2^ishift));
+iTempDn = bitshift((iTempD*imult),-ishift);%floor((iTempD*imult)/(2^ishift));
 end
