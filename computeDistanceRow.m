@@ -14,7 +14,7 @@ function  calcPara = computeDistanceRow(fid,uiDirMode, iWidth, iHeight,calcPara)
         for i = 1:widthNumber
             for n = ((i-1)*computeSize + 1):(computeSize*i)
                 if(calcPara.use_number == computeSize)
-                    calcMatri(calcMatriIndex,:) = calcPara.computeMatri{j,n}(1);
+                    calcMatri(calcMatriIndex,:) = calcPara.computeMatri{j,n};
                 else
                     calcMatri(calcMatriIndex,:) = calcPara.computeMatri{j,n}(1,2);
                 end

@@ -14,7 +14,7 @@ function  calcPara = computeDistanceCol(fid,uiDirMode, iWidth, iHeight,calcPara)
         for i = 1:heightNumber
             for n = ((i-1)*computeSize + 1):(computeSize*i)
                 if(calcPara.use_number == computeSize)
-                    calcMatri(calcMatriIndex,:) = calcPara.computeMatri{n,j}(1);
+                    calcMatri(calcMatriIndex,:) = calcPara.computeMatri{n,j};
                 else
                     calcMatri(calcMatriIndex,:) = calcPara.computeMatri{n,j}(1,2);
                 end

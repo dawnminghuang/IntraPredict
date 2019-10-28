@@ -15,7 +15,7 @@ function  calcPara = computeDistance(fid,uiDirMode, iWidth, iHeight,calcPara)
             for m = ((j-1)*computeSize + 1):(computeSize*j)
                 for n = ((i-1)*computeSize + 1):(computeSize*i)
                     if(calcPara.use_number == computeSize)
-                        calcMatri(calcMatriIndex,:) = calcPara.computeMatri{m,n}(1);
+                        calcMatri(calcMatriIndex,:) = calcPara.computeMatri{m,n};
                     else
                         calcMatri(calcMatriIndex,:) = calcPara.computeMatri{m,n}(1,2);
                     end
@@ -27,7 +27,9 @@ function  calcPara = computeDistance(fid,uiDirMode, iWidth, iHeight,calcPara)
             distance = abs(calcPara.end - calcPara.start) +1;
             if (distance > calcPara.max_distance) 
                 calcPara.max_distance = distance;
-                save('calcMatri.mat','calcMatri');
+                if(uiDirMode == 6)
+                    save('calcMatri.mat','calcMatri');
+                end
             end
             calcMatriIndex = 1;
             startX = (i-1)*computeSize ;

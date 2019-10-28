@@ -4,8 +4,8 @@ close all;
 calcRow = 0;
 calcCol = 0;
 calcRepeat = 0;
-calcAll  = 1;
-calcMatri  = 0;
+calcAll  = 0;
+calcMatri  = 1;
 calcWidth = 4;
 calcHeight = 4;
 pointNumber = 4;
@@ -72,6 +72,7 @@ for modeIndx = 1:length(mode)
                            iXn = i+j+2;
                            iXnP2 =  i+j+2;
                         end
+                        [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, iXnN1, iX, iXn, iXnP2,1, 1, calcPara, calcAll);
                     end
                 end  
@@ -85,10 +86,11 @@ for modeIndx = 1:length(mode)
                            iX = i-j-1;
                            iXn = i-j;
                            iXnP2 = i-j;
+                           [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         elseif(i < j)
                            iXnN1 = j-i-2;
-                           iX = j-i-1 ;
-                           iXn = j -i;
+                           iX = j-i-1;
+                           iXn = j-i;
                            iXnP2 = j-i;
                         else
                             iXnN1 = 0;
@@ -109,11 +111,13 @@ for modeIndx = 1:length(mode)
                            iX = i-floor(j/2);
                            iXn = i-floor(j/2);
                            iXnP2 = i-floor(j/2);
+                           [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         elseif((zVR == 1)||(zVR == 3)||(zVR == 5))
                            iXnN1 = i-floor(j/2)-2;
                            iX = i-floor(j/2)-1 ;
                            iXn = i-floor(j/2);
                            iXnP2 = i-floor(j/2);
+                           [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         elseif(zVR == -1)
                             iXnN1 = 0;
                             iX = -1;
@@ -153,6 +157,7 @@ for modeIndx = 1:length(mode)
                             iX = i -2;
                             iXn = i -3;
                             iXnP2 = i -3;
+                            [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         end
                         calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, iXnN1, iX, iXn, iXnP2,1, 1, calcPara, calcAll);
                     end
@@ -167,11 +172,13 @@ for modeIndx = 1:length(mode)
                            iX = i + floor(j/2)+1;
                            iXn = i + floor(j/2)+1;
                            iXnP2 = i + floor(j/2)+1;
+                           [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         elseif((j == 1)||(j == 3))
                            iXnN1 = i + floor(j/2);
                            iX = i + floor(j/2)+1;
                            iXn = i + floor(j/2)+2;
                            iXnP2 = i + floor(j/2)+2;
+                           [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         end
                         calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, iXnN1, iX, iXn, iXnP2,1, 1, calcPara, calcAll);
                     end
@@ -223,6 +230,7 @@ for modeIndx = 1:length(mode)
                            iXn = i+j+2;
                            iXnP2 =  i+j+2;
                         end
+                        [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, iXnN1, iX, iXn, iXnP2,1, 1, calcPara, calcAll);
                     end
                 end  
@@ -236,6 +244,7 @@ for modeIndx = 1:length(mode)
                            iX = i-j-1;
                            iXn = i-j;
                            iXnP2 = i-j;
+                           [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         elseif(i < j)
                            iXnN1 = j-i-2;
                            iX = j-i-1 ;
@@ -260,11 +269,13 @@ for modeIndx = 1:length(mode)
                            iX = i-floor(j/2);
                            iXn = i-floor(j/2);
                            iXnP2 = i-floor(j/2);
+                           [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         elseif((zVR == 1)||(zVR == 3)||(zVR == 5) || (zVR == 7)||(zVR == 9)||(zVR == 11) ||(zVR == 13))
                            iXnN1 = i-floor(j/2)-2;
                            iX = i-floor(j/2)-1 ;
                            iXn = i-floor(j/2);
                            iXnP2 = i-floor(j/2);
+                           [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         elseif(zVR == -1)
                             iXnN1 = 0;
                             iX = -1;
@@ -304,6 +315,7 @@ for modeIndx = 1:length(mode)
                             iX = i - 2*j -2;
                             iXn = i - 2*j -3;
                             iXnP2 = i - 2*j -3;
+                            [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         end
                         calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, iXnN1, iX, iXn, iXnP2,1, 1, calcPara, calcAll);
                     end
@@ -324,6 +336,7 @@ for modeIndx = 1:length(mode)
                            iXn = i + floor(j/2)+2;
                            iXnP2 = i + floor(j/2)+2;
                         end
+                        [iXnN1,iX,iXn, iXnP2] = convertXPoints(iXnN1,iX,iXn, iXnP2);
                         calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, iXnN1, iX, iXn, iXnP2,1, 1, calcPara, calcAll);
                     end
                 end  
