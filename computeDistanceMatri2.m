@@ -1,24 +1,17 @@
 
-function  calcPara = computeDistance(fid,uiDirMode, iWidth, iHeight,calcPara)
+function  calcPara = computeDistanceMatri2(fid,uiDirMode, iWidth, iHeight,calcPara)
     
     computeSize = 4;
+    computeSizeHeight = 2;
     widthNumber = iWidth /computeSize;
-    heightNumber = iHeight/computeSize;
-    if(calcPara.use_number == computeSize)
-       calcMatri = zeros(computeSize^2,computeSize); 
-    else
-       calcMatri = zeros(computeSize^2,1);
-    end
+    heightNumber = iHeight/computeSizeHeight;
+    calcMatri = zeros(computeSize*computeSizeHeight,1);
     calcMatriIndex = 1;
     for j = 1:heightNumber
         for i = 1:widthNumber
-            for m = ((j-1)*computeSize + 1):(computeSize*j)
+            for m = ((j-1)*computeSizeHeight + 1):(computeSizeHeight*j)
                 for n = ((i-1)*computeSize + 1):(computeSize*i)
-                    if(calcPara.use_number == computeSize)
-                        calcMatri(calcMatriIndex,:) = calcPara.computeMatri{m,n}(1);
-                    else
-                        calcMatri(calcMatriIndex,:) = calcPara.computeMatri{m,n}(1,2);
-                    end
+                    calcMatri(calcMatriIndex,:) = calcPara.computeMatri{m,n}(1,2);
                     calcMatriIndex = calcMatriIndex +1;
                 end  
             end
@@ -31,7 +24,7 @@ function  calcPara = computeDistance(fid,uiDirMode, iWidth, iHeight,calcPara)
             end
             calcMatriIndex = 1;
             startX = (i-1)*computeSize ;
-            startY = (j-1)*computeSize; 
+            startY = (j-1)*computeSizeHeight; 
             fprintf(fid, 'mode:%d  width:%d  height:%d (%d,%d) distance:%d max_distance:%d \n',uiDirMode, iWidth, iHeight,startX, startY, distance, calcPara.max_distance);
 
         end

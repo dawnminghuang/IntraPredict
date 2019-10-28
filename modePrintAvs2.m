@@ -5,7 +5,8 @@ calcRow = 0;
 calcCol = 0;
 calcRepeat = 0;
 calcAll  = 0;
-calcMatri  = 1;
+calcMatri  = 0;
+calcMatri2  = 1;
 mode = [3 4 5 6 7 8 9 10 11 13 14 15 16 17 18 19 20  21 22 23 25 26 27 28 29 30 31 32];
 g_aucXYflg = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 ];
 g_aucSign = [0 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 1 1 1 1 1 1 1 1 1 1 1 0 -1 -1 -1 -1 -1 -1 -1 -1];
@@ -22,34 +23,40 @@ g_tu_x_y = {
         [32 32];[32 8]; 
         [64 64]; 
 };
+avs2_path = './modeAvs2/';
 
 for modeIndx = 1:length(mode)
 
     uiDirMode = mode(1,modeIndx);
     allFid = -1;
     if(calcRow)
-       modePathRow = sprintf('./modeOutRow/mode_%d.txt',uiDirMode);
+       modePathRow = sprintf('./modeAvs2/modeOutRow/mode_%d.txt',uiDirMode);
        rowFid = fopen(modePathRow,'w+');
     elseif(calcCol)
-       modePathCol = sprintf('./modeOutCol/mode_%d.txt',uiDirMode);
+       modePathCol = sprintf('./modeAvs2/modeOutCol/mode_%d.txt',uiDirMode);
        colFid = fopen(modePathCol,'w+');
     end
     if(calcRepeat)
-       modePathRepeat = sprintf('./modeOutRepeat/mode_%d.txt',uiDirMode);
+       modePathRepeat = sprintf('./modeAvs2/modeOutRepeat/mode_%d.txt',uiDirMode);
        repeatFid = fopen(modePathRepeat,'w+');
     end
     if(calcAll)
-        allPath = sprintf('./AllOut/mode_%d.txt',uiDirMode);
+        allPath = sprintf('./modeAvs2/AllOut/mode_%d.txt',uiDirMode);
         allFid =  fopen(allPath,'w+');        
     end
     if(calcMatri)
-        MatriPath = sprintf('./modeOutMatri/mode_%d.txt',uiDirMode);
+        MatriPath = sprintf('./modeAvs2/modeOutMatri/mode_%d.txt',uiDirMode);
         matriFid =  fopen(MatriPath,'w+');        
+    end
+    if(calcMatri2)
+        Matri2Path = sprintf('./modeAvs2/modeOutMatri2/mode_%d.txt',uiDirMode);
+        matri2Fid =  fopen(Matri2Path,'w+');        
     end
     calcPara.clac_index = 1;
     calcPara.clac_number = 1;
     calcPara.max_index = 0;
     calcPara.min_index = 0;
+    calcPara.use_number = 1;
     calcPara.start_index = zeros(1,256);
     calcPara.max_distance = 0;
     iDx = g_aucDirDx(1,uiDirMode);
@@ -126,7 +133,7 @@ for modeIndx = 1:length(mode)
                     iY    = min(iHeight2 - 1, iY);
                     iYn   = min(iHeight2 - 1, iYn);
                     iYnP2 = min(iHeight2 - 1, iYnP2);
-                    calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, iYnN1, iY, iYn, iYnP2,iDxy, iX, calcPara, calcAll);
+                    calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, iYnN1, iY, iYn, iYnP2,iDxy, 0, calcPara, calcAll);
                 end
             end
         end    
@@ -144,6 +151,9 @@ for modeIndx = 1:length(mode)
         if(calcMatri)
             calcPara = computeDistance(matriFid,uiDirMode, iWidth, iHeight,calcPara);
         end
+        if(calcMatri2)
+            calcPara = computeDistanceMatri2(matri2Fid,uiDirMode, iWidth, iHeight,calcPara);
+        end
     end
 
     result.mode(modeIndx) = uiDirMode
@@ -151,13 +161,19 @@ for modeIndx = 1:length(mode)
 end
 
 vd = [result.mode; result.distance];
-bar(result.mode, result.distance);
+hold on;
+plot(result.mode, result.distance +25);
+hold on;
+scatter(result.mode, result.distance +25);
 vdOut = vd';
 if(calcRow)
-    xlswrite('./modeOutRow/mode_distance_row.xlsx',vdOut);
+    xlswrite('./modeAvs2/modeOutRow/mode_distance_row.xlsx',vdOut);
 elseif(calcCol)
-    xlswrite('./modeOutCol/mode_distance_col.xlsx',vdOut);
+    xlswrite('./modeAvs2/modeOutCol/mode_distance_col.xlsx',vdOut);
 end   
 if(calcMatri)
-    xlswrite('./modeOutMatri/mode_distance_Matri.xlsx',vdOut);
+    xlswrite('./modeAvs2/modeOutMatri/mode_distance_Matri.xlsx',vdOut);
+end
+if(calcMatri2)
+    xlswrite('./modeAvs2/modeOutMatri2/mode_distance_Matri2.xlsx',vdOut);
 end

@@ -4,12 +4,20 @@ function  calcPara = computeDistanceCol(fid,uiDirMode, iWidth, iHeight,calcPara)
     computeSize = 4;
     widthNumber = iWidth ;
     heightNumber = iHeight /computeSize;
-    calcMatri = zeros(computeSize,computeSize);
+    if(calcPara.use_number == computeSize)
+       calcMatri = zeros(computeSize,computeSize); 
+    else
+       calcMatri = zeros(computeSize,1);
+    end
     calcMatriIndex = 1;
     for j = 1:widthNumber
         for i = 1:heightNumber
             for n = ((i-1)*computeSize + 1):(computeSize*i)
-                calcMatri(calcMatriIndex,:) = calcPara.computeMatri{n,j}(1,2);
+                if(calcPara.use_number == computeSize)
+                    calcMatri(calcMatriIndex,:) = calcPara.computeMatri{n,j}(1);
+                else
+                    calcMatri(calcMatriIndex,:) = calcPara.computeMatri{n,j}(1,2);
+                end
                 calcMatriIndex = calcMatriIndex +1;
             end  
             calcPara.start = min(calcMatri(:));
