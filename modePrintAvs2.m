@@ -5,8 +5,9 @@ calcRow = 0;
 calcCol = 0;
 calcRepeat = 0;
 calcAll  = 0;
-calcMatri  = 0;
-calcMatri2  = 1;
+calcMatri  = 1;
+calcMatri4X2  = 0;
+calcMatri2X4  = 0;
 mode = [3 4 5 6 7 8 9 10 11 13 14 15 16 17 18 19 20  21 22 23 25 26 27 28 29 30 31 32];
 g_aucXYflg = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 ];
 g_aucSign = [0 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 1 1 1 1 1 1 1 1 1 1 1 0 -1 -1 -1 -1 -1 -1 -1 -1];
@@ -29,40 +30,45 @@ for modeIndx = 1:length(mode)
 
     uiDirMode = mode(1,modeIndx);
     allFid = -1;
-    if(calcRow)
-       modePathRow = sprintf('./modeAvs2/modeOutRow/mode_%d.txt',uiDirMode);
-       rowFid = fopen(modePathRow,'w+');
+        if(calcRow)
+       dir_path = 'modeOutRow/';
+       rowFid = createFile(avs2_path,dir_path,uiDirMode);
     elseif(calcCol)
-       modePathCol = sprintf('./modeAvs2/modeOutCol/mode_%d.txt',uiDirMode);
-       colFid = fopen(modePathCol,'w+');
+       dir_path = 'modeOutCol/';
+       colFid = createFile(avs2_path,dir_path,uiDirMode);
     end
     if(calcRepeat)
-       modePathRepeat = sprintf('./modeAvs2/modeOutRepeat/mode_%d.txt',uiDirMode);
-       repeatFid = fopen(modePathRepeat,'w+');
+       dir_path = 'modeOutRepeat/';
+       repeatFid = createFile(avs2_path,dir_path,uiDirMode);
     end
     if(calcAll)
-        allPath = sprintf('./modeAvs2/AllOut/mode_%d.txt',uiDirMode);
-        allFid =  fopen(allPath,'w+');        
+       dir_path = 'AllOut/';
+       allFid = createFile(avs2_path,dir_path,uiDirMode);       
     end
     if(calcMatri)
-        MatriPath = sprintf('./modeAvs2/modeOutMatri/mode_%d.txt',uiDirMode);
-        matriFid =  fopen(MatriPath,'w+');        
+       dir_path = 'modeOutMatri/';
+       matriFid = createFile(avs2_path,dir_path,uiDirMode);     
     end
-    if(calcMatri2)
-        Matri2Path = sprintf('./modeAvs2/modeOutMatri2/mode_%d.txt',uiDirMode);
-        matri2Fid =  fopen(Matri2Path,'w+');        
+    if(calcMatri4X2)
+        dir_path = 'modeOutMatri4X2/';
+        matri4X2Fid = createFile(avs2_path,dir_path,uiDirMode);          
+    end
+    if(calcMatri2X4)
+        dir_path = 'modeOutMatri2X4/';
+        matri2X4Fid = createFile(avs2_path,dir_path,uiDirMode);     
     end
     calcPara.clac_index = 1;
     calcPara.clac_number = 1;
     calcPara.max_index = 0;
     calcPara.min_index = 0;
-    calcPara.use_number = 1;
+    calcPara.use_number = 4;
     calcPara.start_index = zeros(1,256);
     calcPara.max_distance = 0;
     iDx = g_aucDirDx(1,uiDirMode);
     iDy = g_aucDirDy(1,uiDirMode);
     uixyflag = g_aucXYflg(1,uiDirMode);
     iDxy     = g_aucSign(1,uiDirMode);
+    calcPara.mode = uiDirMode;
     for tuIndex = 1:length(g_tu_x_y)
         iWidth = g_tu_x_y{tuIndex,1}(1);
         iHeight = g_tu_x_y{tuIndex,1}(2);
@@ -151,8 +157,11 @@ for modeIndx = 1:length(mode)
         if(calcMatri)
             calcPara = computeDistance(matriFid,uiDirMode, iWidth, iHeight,calcPara);
         end
-        if(calcMatri2)
-            calcPara = computeDistanceMatri2(matri2Fid,uiDirMode, iWidth, iHeight,calcPara);
+        if(calcMatri4X2)
+            calcPara = computeDistanceMatri4X2(matri4X2Fid,uiDirMode, iWidth, iHeight,calcPara);
+        end
+        if(calcMatri2X4)
+            calcPara = computeDistanceMatri2X4(matri2X4Fid,uiDirMode, iWidth, iHeight,calcPara);
         end
     end
 
@@ -174,6 +183,9 @@ end
 if(calcMatri)
     xlswrite('./modeAvs2/modeOutMatri/mode_distance_Matri.xlsx',vdOut);
 end
-if(calcMatri2)
-    xlswrite('./modeAvs2/modeOutMatri2/mode_distance_Matri2.xlsx',vdOut);
+if(calcMatri4X2)
+    xlswrite('./modeAvs2/modeOutMatri4X2/mode_distance_Matri4X2.xlsx',vdOut);
+end
+if(calcMatri2X4)
+    xlswrite('./modeAvs2/modeOutMatri2X4/mode_distance_Matri2X4.xlsx',vdOut);
 end

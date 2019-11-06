@@ -5,11 +5,13 @@ calcRow = 0;
 calcCol = 0;
 calcRepeat = 0;
 calcAll  = 0;
-calcMatri  = 1;
+calcMatri  = 0;
+calcMatri4X2  = 0;
+calcMatri2X4  = 1;
 calcWidth = 4;
 calcHeight = 4;
 pointNumber = 4;
-mode = [3 4 5 6 7 8 9];
+mode = [3 4 5 6 7 8];
 g_tu_x_y = {
     % width/height
     [4 4];
@@ -40,6 +42,14 @@ for modeIndx = 1:length(mode)
        dir_path = 'modeOutMatri/';
        matriFid = createFile(h264_path,dir_path,uiDirMode);     
     end
+    if(calcMatri4X2)
+        dir_path = 'modeOutMatri4X2/';
+        matri4X2Fid = createFile(h264_path,dir_path,uiDirMode);          
+    end
+    if(calcMatri2X4)
+        dir_path = 'modeOutMatri2X4/';
+        matri2X4Fid = createFile(h264_path,dir_path,uiDirMode);     
+    end
     calcPara.clac_index = 1;
     calcPara.use_number = 4;
     calcPara.clac_number = 1;
@@ -61,11 +71,11 @@ for modeIndx = 1:length(mode)
             if(uiDirMode == 3)
                 for j  =0:iHeight-1
                     for i= 0:iWidth-1
-                        if((i==Down_left_limit)&&(j==Down_left_limit))
-                           iXnN1 = Down_left_limit*2;
-                           iX = Down_left_limit*2;
-                           iXn = Down_left_limit*2 + 1;
-                           iXnP2 = Down_left_limit*2 + 1;
+                        if((i==3)&&(j==3))
+                           iXnN1 = 6;
+                           iX = 6;
+                           iXn = 7;
+                           iXnP2 = 7;
                         else
                            iXnN1 = i+j;
                            iX = i+j+1;
@@ -147,7 +157,7 @@ for modeIndx = 1:length(mode)
                            iX = j-floor(i/2)-1 ;
                            iXn = j -floor(i/2);
                            iXnP2 = j-floor(i/2);
-                        elseif(zVR == -1)
+                        elseif(zHD == -1)
                             iXnN1 = 0;
                             iX = -1;
                             iXn = -2;
@@ -305,7 +315,7 @@ for modeIndx = 1:length(mode)
                            iX = j-floor(i/2)-1 ;
                            iXn = j -floor(i/2);
                            iXnP2 = j-floor(i/2);
-                        elseif(zVR == -1)
+                        elseif(zHD == -1)
                             iXnN1 = 0;
                             iX = -1;
                             iXn = -2;
@@ -385,6 +395,12 @@ for modeIndx = 1:length(mode)
         if(calcMatri)
             calcPara = computeDistance(matriFid,uiDirMode, iWidth, iHeight,calcPara);
         end
+        if(calcMatri4X2)
+            calcPara = computeDistanceMatri4X2(matri4X2Fid,uiDirMode, iWidth, iHeight,calcPara);
+        end
+        if(calcMatri2X4)
+            calcPara = computeDistanceMatri2X4(matri2X4Fid,uiDirMode, iWidth, iHeight,calcPara);
+        end
     end
 
     result.mode(modeIndx) = uiDirMode
@@ -404,4 +420,11 @@ elseif(calcCol)
 end   
 if(calcMatri)
     xlswrite(strcat(h264_path, 'modeOutMatri/mode_distance_matri.xlsx'),vdOut);
+end
+
+if(calcMatri4X2)
+    xlswrite(strcat(h264_path, 'modeOutMatri4X2/mode_distance_Matri4X2.xlsx'),vdOut);
+end
+if(calcMatri2X4)
+    xlswrite(strcat(h264_path, 'modeOutMatri2X4/mode_distance_Matri2X4.xlsx'),vdOut);
 end

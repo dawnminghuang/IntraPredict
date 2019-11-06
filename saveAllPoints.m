@@ -1,5 +1,5 @@
 
-function  calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, tu_x,tu_y,iYnN1, iY, iYn,iYnP2,iX,~,calcPara,calcAll)
+function  calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, tu_x,tu_y,iYnN1, iY, iYn,iYnP2,~,iX,calcPara,calcAll)
     if(iX == 0) 
         iYnN1 = -iYnN1;
         iY = -iY;
@@ -20,25 +20,12 @@ function  calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, tu_x,tu_y
     calcPara.computeMatri{tu_y+1,tu_x+1}(1,2) = iY;
     calcPara.computeMatri{tu_y+1,tu_x+1}(1,3) = iYn;
     calcPara.computeMatri{tu_y+1,tu_x+1}(1,4) = iYnP2;
-    if(calcPara.use_number==1)
-        print_number = 64;
-    else
-        if(iWidth == 4)
-           print_number = 4;
-        else
-           print_number = 8;
-        end
-    end
-    
+
     if(calcAll)
-        if(((iWidth == print_number) &&(iHeight == print_number)))
-            fprintf(allFid, '%4d',iY);
-            if((tu_x == print_number -1))
-                if(uiDirMode == 6 && iWidth == 8 && tu_y == print_number -1)
-                    ;
-                end
-                fprintf(allFid, '\n');
-            end
+        fprintf(allFid, '%4d',iYn);
+        calcPara.clac_index = calcPara.clac_index +1;
+        if(mod(calcPara.clac_index,iWidth) == 0)
+            fprintf(allFid, '\n');
         end
     end
 end

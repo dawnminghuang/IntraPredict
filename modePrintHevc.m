@@ -2,10 +2,12 @@ clc;
 clear;
 close all;
 calcRow = 0;
-calcCol = 1;
+calcCol = 0;
 calcRepeat = 0;
-calcAll  = 0;
-calcMatri  = 0;
+calcAll  = 1;
+calcMatri4X2  = 0;
+calcMatri2X4  = 0;
+calcMatri  = 1;
 VER_IDX = 26; %index for intra VERTICAL   mode  
 HOR_IDX = 10; % index for intra HORIZONTAL mode
 
@@ -50,7 +52,14 @@ for modeIndx = 1:length(mode)
        dir_path = 'modeOutMatri/';
        matriFid = createFile(hevc_path,dir_path,uiDirMode);     
     end
-
+    if(calcMatri4X2)
+        dir_path = 'modeOutMatri4X2/';
+        matri4X2Fid = createFile(hevc_path,dir_path,uiDirMode);          
+    end
+    if(calcMatri2X4)
+        dir_path = 'modeOutMatri2X4/';
+        matri2X4Fid = createFile(hevc_path,dir_path,uiDirMode);     
+    end
     bIsModVer = (uiDirMode >= 18);
     if(bIsModVer)
         intraPredAngleMode = uiDirMode - VER_IDX;
@@ -63,17 +72,18 @@ for modeIndx = 1:length(mode)
     else
         signAng = 1;
     end
-    calcPara.clac_index = 1;
-    calcPara.clac_number = 1;
-    calcPara.max_index = 0;
-    calcPara.min_index = 0;
-    calcPara.use_number = 1;
-    calcPara.start_index = zeros(1,256);
-    calcPara.max_distance = 0;
     invAngle = invAngTable(1,absAngMode+1);
     absAng = angTable(1,absAngMode+1);
     intraPredAngle = signAng*absAng;
+    calcPara.clac_index = 0;
+    calcPara.clac_number = 1;
+    calcPara.max_index = 0;
+    calcPara.min_index = 0;
+    calcPara.use_number = 4;
+    calcPara.start_index = zeros(1,256);
+    calcPara.max_distance = 0;
 
+ 
     for tuIndex = 1:length(g_tu_x_y)
         iWidth = g_tu_x_y{tuIndex,1}(1);
         iHeight = g_tu_x_y{tuIndex,1}(2);
@@ -81,19 +91,19 @@ for modeIndx = 1:length(mode)
         if(bIsModVer)
             for j = 0:iHeight-1
                 deltaPos = deltaPos + intraPredAngle;
-                deltaInt   = floor(deltaPos/2^5);
+                deltaInt   = fix(deltaPos/(2^5));
                 for i = 0:iWidth-1
-                   refMainIndex = i+deltaInt+1; 
-                   calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, 0, refMainIndex, 0, 0,1, 1, calcPara, calcAll);
+                   refMainIndex = i+deltaInt; 
+                   calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, refMainIndex, refMainIndex, refMainIndex+1,refMainIndex+1,1, 1, calcPara, calcAll);
                 end
             end   
         else
             for i = 0:iWidth-1
                 deltaPos = deltaPos + intraPredAngle;
-                deltaInt   = floor(deltaPos/2^5);
+                deltaInt   = fix(deltaPos/2^5);
                 for j = 0:iHeight-1
-                   refMainIndex = j+deltaInt+1; 
-                   calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, 0, refMainIndex, 0, 0,0, 1, calcPara, calcAll);
+                   refMainIndex = deltaInt-j -1; 
+                   calcPara = saveAllPoints(allFid, uiDirMode, iWidth, iHeight, i, j, refMainIndex, refMainIndex, refMainIndex+1,refMainIndex+1,0, 1, calcPara, calcAll);
                 end
             end  
         end
@@ -110,6 +120,13 @@ for modeIndx = 1:length(mode)
         if(calcMatri)
             calcPara = computeDistance(matriFid,uiDirMode, iWidth, iHeight,calcPara);
         end
+        if(calcMatri4X2)
+            calcPara = computeDistanceMatri4X2(matri4X2Fid,uiDirMode, iWidth, iHeight,calcPara);
+        end
+        if(calcMatri2X4)
+            calcPara = computeDistanceMatri2X4(matri2X4Fid,uiDirMode, iWidth, iHeight,calcPara);
+        end
+        
     end
 
     result.mode(modeIndx) = uiDirMode
@@ -129,4 +146,10 @@ elseif(calcCol)
 end   
 if(calcMatri)
     xlswrite(strcat(hevc_path, 'modeOutMatri/mode_distance_matri.xlsx'),vdOut);
+end
+if(calcMatri4X2)
+    xlswrite(strcat(hevc_path, 'modeOutMatri4X2/mode_distance_Matri4X2.xlsx'),vdOut);
+end
+if(calcMatri2X4)
+    xlswrite(strcat(hevc_path, 'modeOutMatri2X4/mode_distance_Matri2X4.xlsx'),vdOut);
 end
